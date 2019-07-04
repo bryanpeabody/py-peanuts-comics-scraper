@@ -3,16 +3,16 @@ from datetime import timedelta
 import urllib.request
 import requests
 from bs4 import BeautifulSoup
-import giphypop
 from urllib import request
+import magic
+import os
 
-start_date = datetime.datetime(2019, 6, 1)
-end_date = datetime.datetime(2019, 7, 1)
-#end_date = datetime.datetime(2000, 1, 3)
+start_date = datetime.datetime(1999, 1, 1)
+end_date = datetime.datetime(1999, 12, 31)
 
 # Loop over all the date range
 while start_date <= end_date:
-    filename = start_date.strftime('%Y-%m-%d') + ".gif"    
+    filename = "./images/" + start_date.strftime('%Y-%m-%d')  
     url = "https://www.gocomics.com/peanuts/" + start_date.strftime('%Y') + "/" + start_date.strftime('%m') + "/" + start_date.strftime('%d')
 
     # Read in the HTML from the URL
@@ -28,17 +28,31 @@ while start_date <= end_date:
     # Filter to the picture tag and specific class
     picture = soup.find("picture", {"class": "item-comic-image"})
 
-    try:
-        # Extract the img tag
-        img = picture.img
-        
+    # Extract the img tag
+    try:            
+        img = picture.img                
+
         # Get the image src - will be the comic strip as a gif
         comicStripURL = img['src']
-
-        g = giphypop.Giphy()
         request.urlretrieve(comicStripURL, filename)
-    except:
-        print(url)    
+
+        # Determine the mime type. Either jpg or gif
+        mime = magic.Magic(mime=True) 
+        mimetype = mime.from_file(filename)   
+        
+        ext = '.'
+
+        if mimetype == 'image/jpeg':
+            ext += 'jpg'
+        elif mimetype == 'image/gif':
+            ext += 'gif'
+        else:
+            raise Exception("Failed to get mime type for: "+ comicStripURL)
+
+        # Rename the file
+        os.rename(filename, filename + ext)
+    except Exception as err:        
+        print("Failed to get: "+ filename)
 
     # Increment the date
     start_date += timedelta(days=1)
