@@ -7,8 +7,8 @@ from urllib import request
 import magic
 import os
 
-start_date = datetime.datetime(1999, 1, 1)
-end_date = datetime.datetime(1999, 12, 31)
+start_date = datetime.datetime(1950, 1, 1)
+end_date = datetime.datetime(1950, 12, 31)
 
 # Loop over all the date range
 while start_date <= end_date:
