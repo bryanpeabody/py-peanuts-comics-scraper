@@ -1,14 +1,15 @@
-import datetime
+from datetime import datetime
 from datetime import timedelta
 import urllib.request
 import requests
 from bs4 import BeautifulSoup
 from urllib import request
-import magic
+#import magic
 import os
+from sys import argv
 
-start_date = datetime.datetime(1950, 1, 1)
-end_date = datetime.datetime(1950, 12, 31)
+start_date = datetime.strptime(argv[1], '%Y-%m-%d')
+end_date = datetime.strptime(argv[2], '%Y-%m-%d')
 
 # Loop over all the date range
 while start_date <= end_date:
@@ -29,30 +30,31 @@ while start_date <= end_date:
     picture = soup.find("picture", {"class": "item-comic-image"})
 
     # Extract the img tag
-    try:            
-        img = picture.img                
+    #try:            
+    img = picture.img                
 
-        # Get the image src - will be the comic strip as a gif
-        comicStripURL = img['src']
-        request.urlretrieve(comicStripURL, filename)
+    # Get the image src - will be the comic strip as a gif
+    comicStripURL = img['src']
+    request.urlretrieve(comicStripURL, filename)
 
-        # Determine the mime type. Either jpg or gif
-        mime = magic.Magic(mime=True) 
-        mimetype = mime.from_file(filename)   
-        
-        ext = '.'
+    # Determine the mime type. Either jpg or gif
+    mime = magic.Magic(mime=True) 
+    mimetype = mime.from_file(filename)   
+    
+    ext = '.'
 
-        if mimetype == 'image/jpeg':
-            ext += 'jpg'
-        elif mimetype == 'image/gif':
-            ext += 'gif'
-        else:
-            raise Exception("Failed to get mime type for: "+ comicStripURL)
+    if mimetype == 'image/jpeg':
+        ext += 'jpg'
+    elif mimetype == 'image/gif':
+        ext += 'gif'
+    else:
+        raise Exception("Failed to get mime type for: "+ comicStripURL)
 
-        # Rename the file
-        os.rename(filename, filename + ext)
-    except Exception as err:        
-        print("Failed to get: "+ filename)
+    # Rename the file
+    os.rename(filename, filename + ext)
+    #except Exception as err:        
+    #    print("Failed to get: "+ filename)
 
     # Increment the date
     start_date += timedelta(days=1)
+
