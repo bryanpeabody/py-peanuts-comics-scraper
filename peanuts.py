@@ -4,7 +4,7 @@ import urllib.request
 import requests
 from bs4 import BeautifulSoup
 from urllib import request
-#import magic
+import magic
 import os
 from sys import argv
 
