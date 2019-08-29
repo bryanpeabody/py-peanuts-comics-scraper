@@ -5,7 +5,7 @@ Requires several packages to be installed including magic and beautifulsoup. Dev
 
 Usage
 -----
-$ source py-peanuts-comics-scraper/env/bin/activate
+$ source ./py-peanuts-comics-scraper/env/bin/activate
 
 (env) $ cd ./py-peanuts-comics-scraper
 
