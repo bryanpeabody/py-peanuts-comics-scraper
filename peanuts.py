@@ -8,6 +8,7 @@ import magic
 import os
 from sys import argv
 
+# Get the start and end dates from the passed in parameters
 start_date = datetime.strptime(argv[1], '%Y-%m-%d')
 end_date = datetime.strptime(argv[2], '%Y-%m-%d')
 
