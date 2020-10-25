@@ -12,7 +12,7 @@ from sys import argv
 start_date = ""
 end_date = ""
 
-try :
+try:
     start_date = datetime.strptime(argv[1], '%Y-%m-%d')
     end_date = datetime.strptime(argv[2], '%Y-%m-%d')
 except:
@@ -26,9 +26,9 @@ while start_date <= end_date:
 
     # Read in the HTML from the URL
     fp = urllib.request.urlopen(url)
-    mybytes = fp.read()
+    asbytes = fp.read()
 
-    peanutsHTML = mybytes.decode("utf8")
+    peanutsHTML = asbytes.decode("utf8")
     fp.close()
 
     # Setup parser
@@ -38,31 +38,33 @@ while start_date <= end_date:
     picture = soup.find("picture", {"class": "item-comic-image"})
 
     # Extract the img tag
-    img = picture.img                
+    try:
+        img = picture.img
 
-    # Get the image src - will be the comic strip as a gif
-    comicStripURL = img['src']
-    request.urlretrieve(comicStripURL, filename)
+        # Get the image src - will be the comic strip as a gif
+        comicStripURL = img['src']
+        request.urlretrieve(comicStripURL, filename)
 
-    # Determine the mime type. Either jpg or gif
-    mime = magic.Magic(mime=True)
-    mimetype = mime.from_file(filename)
+        # Determine the mime type. Either jpg or gif
+        mime = magic.Magic(mime=True)
+        mimetype = mime.from_file(filename)
     
-    ext = '.'
+        ext = '.'
 
-    if mimetype == 'image/jpeg':
-        ext += 'jpg'
-    elif mimetype == 'image/gif':
-        ext += 'gif'
-    else:
-        raise Exception("Failed to get mime type for: "+ comicStripURL)
+        if mimetype == 'image/jpeg':
+            ext += 'jpg'
+        elif mimetype == 'image/gif':
+            ext += 'gif'
+        else:
+            raise Exception("Failed to get mime type for: " + comicStripURL)
 
-    # Rename the file
-    os.rename(filename, filename + ext)
+        # Rename the file
+        os.rename(filename, filename + ext)
+    except:
+        print("Strip not found for date: " + str(start_date))
 
     # Increment the date
     start_date += timedelta(days=1)
 
 # Finished
 print("Finished. See the /images directory for the comic strips.")
-
