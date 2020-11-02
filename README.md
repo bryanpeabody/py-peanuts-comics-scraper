@@ -4,7 +4,9 @@ Downloads Peanuts comic strips for a given date range.
 Requires several packages to be installed:
 
 pip3 install requests
+
 pip3 install beautifulsoup4
+
 pip3 install python-magic-bin==0.4.14
 
 Usage
